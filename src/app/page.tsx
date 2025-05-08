@@ -2,9 +2,10 @@
 
 import Image from 'next/image'
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Home() {
+  const [binaryPattern, setBinaryPattern] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,6 +14,15 @@ export default function Home() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  useEffect(() => {
+    const pattern = Array.from({ length: 50 }).map(() => 
+      Array.from({ length: 100 }).map(() => 
+        Math.random() > 0.5 ? '1' : '0'
+      ).join(' ')
+    );
+    setBinaryPattern(pattern);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -79,11 +89,9 @@ export default function Home() {
         <div className="absolute inset-0 opacity-10">
           {/* Binary Pattern */}
           <div className="absolute top-0 left-0 w-full h-full text-[8px] text-blue-500/30 overflow-hidden whitespace-nowrap leading-none select-none">
-            {Array.from({ length: 50 }).map((_, i) => (
+            {binaryPattern.map((line, i) => (
               <div key={i} className="animate-slide">
-                {Array.from({ length: 100 }).map((_, j) => (
-                  Math.random() > 0.5 ? '1' : '0'
-                )).join(' ')}
+                {line}
               </div>
             ))}
           </div>
